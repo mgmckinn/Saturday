@@ -52,7 +52,7 @@
                 /* Prevents overflow */
             }
 
-            button, .button {
+            button {
                 background: #ffd700;
                 /* Attentive Gold */
                 color: #003366;
@@ -63,9 +63,6 @@
                 font-size: 1rem;
                 cursor: pointer;
                 margin: 10px 5px;
-                text-decoration: none;
-                text-align: center;
-                display: inline-block;
                 transition: background 0.3s ease, color 0.3s ease;
             }
 
@@ -82,12 +79,11 @@
     </head>
 
     <body>
-            <a href="scheduler.html" class="button">Back to Schedule</a>
+        <div class="container">
             <h1>Schedule History</h1>
             <div id="history-output"></div>
-            <button onclick="window.location.href='./scheduler.html'">Back to Schedule</button>
-            <button onclick="window.location.href='tracker.html'">View Tracker</button>
             <button id="clear-history">Clear History</button>
+            <button onclick="window.location.href='index.html'">Back to Schedule</button>
         </div>
         <script src="scripts/history.js"></script>
     </body>
