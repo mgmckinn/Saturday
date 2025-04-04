@@ -1,49 +1,78 @@
 /** @format */
 
 // Team members with assignment counts
-const nobleCreek = {
+const team = {
   MODs: [
     { name: "Amy", count: 0 },
     { name: "Mitch", count: 0 },
     { name: "Margret", count: 0 },
+    { name: "Shawn", count: 0 },
+    { name: "Nick", count: 0 },
   ],
   fillers: [
     { name: "Cody", count: 0 },
     { name: "Veronica", count: 0 },
     { name: "Vicky", count: 0 },
-  ],
-};
-
-const riverRoad = {
-  MODs: [
-    { name: "Shawn", count: 0 },
-    { name: "Nick", count: 0 },
-  ],
-  fillers: [
     { name: "Karen", count: 0 },
     { name: "Rita", count: 0 },
     { name: "Melli", count: 0 },
   ],
 };
 
-// Combine all team members
-const team = {
-  MODs: [...nobleCreek.MODs, ...riverRoad.MODs],
-  fillers: [...nobleCreek.fillers, ...riverRoad.fillers],
-};
-
 // Temporary schedule to hold the generated schedule before confirmation
 let tempSchedule = { MODs: [], fillers: [] };
 
-// Function to select team members with the least assignments
-function selectLeastAssigned(members, count) {
-  return members
-    .sort((a, b) => a.count - b.count)
-    .slice(0, count)
-    .map((member) => member.name);
+// Load tracker data from localStorage
+function loadTrackerData() {
+  const savedData = localStorage.getItem("trackerData");
+  if (savedData) {
+    const parsedData = JSON.parse(savedData);
+    team.MODs.forEach((member) => {
+      const savedMember = parsedData.MODs.find((m) => m.name === member.name);
+      if (savedMember) member.count = savedMember.count;
+    });
+    team.fillers.forEach((member) => {
+      const savedMember = parsedData.fillers.find(
+        (m) => m.name === member.name
+      );
+      if (savedMember) member.count = savedMember.count;
+    });
+  }
 }
 
-// Function to generate the schedule
+// Save tracker data to localStorage
+function saveTrackerData() {
+  const trackerData = {
+    MODs: team.MODs,
+    fillers: team.fillers,
+  };
+  localStorage.setItem("trackerData", JSON.stringify(trackerData));
+}
+
+// Update the tracker display and save data
+function updateTracker() {
+  const trackerOutput = document.getElementById("tracker-output");
+  trackerOutput.innerHTML = `
+        <h3>Workload Tracker</h3>
+        <p><strong>MODs:</strong></p>
+        <ul>
+            ${team.MODs.map(
+              (member) => `<li>${member.name}: ${member.count} shifts</li>`
+            ).join("")}
+        </ul>
+        <p><strong>Fillers:</strong></p>
+        <ul>
+            ${team.fillers
+              .map(
+                (member) => `<li>${member.name}: ${member.count} shifts</li>`
+              )
+              .join("")}
+        </ul>
+    `;
+  saveTrackerData(); // Save data whenever the tracker is updated
+}
+
+// Function to generate a schedule
 function generateSchedule() {
   const dateInput = document.getElementById("date").value;
   const scheduleOutput = document.getElementById("schedule-output");
@@ -62,8 +91,13 @@ function generateSchedule() {
   const numMODs = 1;
 
   // Select MODs and fillers with the least assignments
-  tempSchedule.MODs = selectLeastAssigned(team.MODs, numMODs);
-  tempSchedule.fillers = selectLeastAssigned(team.fillers, numFillers);
+  tempSchedule.MODs = team.MODs.sort((a, b) => a.count - b.count)
+    .slice(0, numMODs)
+    .map((member) => member.name);
+  tempSchedule.fillers = team.fillers
+    .sort((a, b) => a.count - b.count)
+    .slice(0, numFillers)
+    .map((member) => member.name);
 
   // Display the schedule
   scheduleOutput.innerHTML = `
@@ -106,26 +140,10 @@ function confirmSchedule() {
   updateTracker();
 }
 
-// Function to update the tracker display
-function updateTracker() {
-  const trackerOutput = document.getElementById("tracker-output");
-  trackerOutput.innerHTML = `
-        <h3>Workload Tracker</h3>
-        <p><strong>MODs:</strong></p>
-        <ul>
-            ${team.MODs.map(
-              (member) => `<li>${member.name}: ${member.count} shifts</li>`
-            ).join("")}
-        </ul>
-        <p><strong>Fillers:</strong></p>
-        <ul>
-            ${team.fillers
-              .map(
-                (member) => `<li>${member.name}: ${member.count} shifts</li>`
-              )
-              .join("")}
-        </ul>
-    `;
+// Initialize the app
+function initializeApp() {
+  loadTrackerData(); // Load tracker data on app start
+  updateTracker(); // Update the tracker display
 }
 
 // Attach event listeners to the buttons
@@ -136,59 +154,6 @@ document
   .getElementById("submit-schedule")
   .addEventListener("click", confirmSchedule);
 
-// Initialize the tracker display
-updateTracker();
-// Load tracker data from localStorage
-function loadTrackerData() {
-  const savedData = localStorage.getItem("trackerData");
-  if (savedData) {
-    const parsedData = JSON.parse(savedData);
-    team.MODs.forEach((member) => {
-      const savedMember = parsedData.MODs.find((m) => m.name === member.name);
-      if (savedMember) member.count = savedMember.count;
-    });
-    team.fillers.forEach((member) => {
-      const savedMember = parsedData.fillers.find((m) => m.name === member.name);
-      if (savedMember) member.count = savedMember.count;
-    });
-  }
-}
-
-// Save tracker data to localStorage
-function saveTrackerData() {
-  const trackerData = {
-    MODs: team.MODs,
-    fillers: team.fillers
-  };
-  localStorage.setItem("trackerData", JSON.stringify(trackerData));
-}
-
-// Update the tracker display and save data
-function updateTracker() {
-  const trackerOutput = document.getElementById("tracker-output");
-  trackerOutput.innerHTML = `
-        <h3>Workload Tracker</h3>
-        <p><strong>MODs:</strong></p>
-        <ul>
-            ${team.MODs.map((member) => `<li>${member.name}: ${member.count} shifts</li>`).join("")}
-        </ul>
-        <p><strong>Fillers:</strong></p>
-        <ul>
-            ${team.fillers.map((member) => `<li>${member.name}: ${member.count} shifts</li>`).join("")}
-        </ul>
-    `;
-  saveTrackerData(); // Save data whenever the tracker is updated
-}
-
-// Initialize the app
-function initializeApp() {
-  loadTrackerData(); // Load tracker data on app start
-  updateTracker(); // Update the tracker display
-}
-
-// Attach event listeners to the buttons
-document.getElementById("generate-schedule").addEventListener("click", generateSchedule);
-document.getElementById("submit-schedule").addEventListener("click", confirmSchedule);
-
 // Initialize the app
 initializeApp();
+ t
