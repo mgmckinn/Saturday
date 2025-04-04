@@ -156,4 +156,45 @@ document
 
 // Initialize the app
 initializeApp();
- t
+ function confirmSchedule() {
+   if (!tempSchedule.MODs.length || !tempSchedule.fillers.length) {
+     alert("No schedule to confirm. Please generate a schedule first.");
+     return;
+   }
+
+   // Update the counts for the selected MODs and fillers
+   team.MODs.forEach((member) => {
+     if (tempSchedule.MODs.includes(member.name)) {
+       member.count++;
+     }
+   });
+
+   team.fillers.forEach((member) => {
+     if (tempSchedule.fillers.includes(member.name)) {
+       member.count++;
+     }
+   });
+
+   // Save updated tracker data to localStorage
+   saveTrackerData();
+
+   // Clear the temporary schedule
+   tempSchedule = { MODs: [], fillers: [] };
+
+   // Display confirmation message
+   document.getElementById("schedule-output").innerHTML = `
+        <p>Schedule confirmed and counts updated!</p>
+    `;
+
+   // Update the tracker display
+   updateTracker();
+ }
+
+ // Save tracker data to localStorage
+ function saveTrackerData() {
+   const trackerData = {
+     MODs: team.MODs,
+     fillers: team.fillers,
+   };
+   localStorage.setItem("trackerData", JSON.stringify(trackerData));
+ }

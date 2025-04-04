@@ -15,12 +15,11 @@
             <input type="date" id="date" />
             <button id="generate-schedule">Generate Schedule</button>
             <button id="submit-schedule">Submit Schedule</button>
+            <!-- Add this button below the "Submit Schedule" button -->
+            <button onclick="window.location.href='tracker.html'">View Tracker</button>
         
             <h2>Generated Schedule</h2>
             <div id="schedule-output"></div>
-        
-            <h2>Workload Tracker</h2>
-            <div id="tracker-output"></div>
         </div>
         <script>
             if ("serviceWorker" in navigator) {
