@@ -198,3 +198,46 @@ initializeApp();
    };
    localStorage.setItem("trackerData", JSON.stringify(trackerData));
  }
+ function confirmSchedule() {
+   if (!tempSchedule.MODs.length || !tempSchedule.fillers.length) {
+     alert("No schedule to confirm. Please generate a schedule first.");
+     return;
+   }
+
+   // Update the counts for the selected MODs and fillers
+   team.MODs.forEach((member) => {
+     if (tempSchedule.MODs.includes(member.name)) {
+       member.count++;
+     }
+   });
+
+   team.fillers.forEach((member) => {
+     if (tempSchedule.fillers.includes(member.name)) {
+       member.count++;
+     }
+   });
+
+   // Save updated tracker data to localStorage
+   saveTrackerData();
+
+   // Save the schedule to history
+   const scheduleHistory =
+     JSON.parse(localStorage.getItem("scheduleHistory")) || [];
+   scheduleHistory.push({
+     date: new Date().toLocaleDateString(),
+     MODs: tempSchedule.MODs,
+     fillers: tempSchedule.fillers,
+   });
+   localStorage.setItem("scheduleHistory", JSON.stringify(scheduleHistory));
+
+   // Clear the temporary schedule
+   tempSchedule = { MODs: [], fillers: [] };
+
+   // Display confirmation message
+   document.getElementById("schedule-output").innerHTML = `
+        <p>Schedule confirmed and counts updated!</p>
+    `;
+
+   // Update the tracker display
+   updateTracker();
+ }

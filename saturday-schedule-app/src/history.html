@@ -4,10 +4,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Workload Tracker</title>
+        <title>Schedule History</title>
         <link rel="stylesheet" href="styles/style.css">
         <style>
-            /* Full-screen layout for the tracker */
             body {
                 margin: 0;
                 padding: 0;
@@ -18,7 +17,6 @@
                 /* Attentive Gold */
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
                 align-items: center;
                 height: 100vh;
             }
@@ -39,7 +37,7 @@
                 /* Black shadow */
             }
 
-            #tracker-output {
+            #history-output {
                 background: rgba(255, 215, 0, 0.2);
                 /* Attentive Gold with transparency */
                 border-radius: 10px;
@@ -82,13 +80,13 @@
 
     <body>
         <div class="container">
-            <h1>Workload Tracker</h1>
-            <div id="tracker-output"></div>
-            <button id="reset-tracker">Reset Tracker</button>
+            <h1>Schedule History</h1>
+            <div id="history-output"></div>
             <button onclick="window.location.href='index.html'">Back to Schedule</button>
-            <button onclick="window.location.href='history.html'">View History</button>
+            <button onclick="window.location.href='tracker.html'">View Tracker</button>
+            <button id="clear-history">Clear History</button>
         </div>
-        <script src="scripts/tracker.js"></script>
+        <script src="scripts/history.js"></script>
     </body>
 
 </html>
